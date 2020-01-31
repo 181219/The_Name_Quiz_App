@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">The Name Quiz App</string>
+    <string name="button_quiz">Quiz</string>
+    <string name="button_database">Database</string>
+    <string name="button_add">Add a dog</string>
+    <string name="name_card">PlaceHolder Name</string>
+    <string name="deleteChar">Enter name</string>
+    <string name="btn_del_char">Delete</string>
+    <string name="btn_add_card">Add Character</string>
+</resources>
