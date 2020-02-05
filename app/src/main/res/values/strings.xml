@@ -2,9 +2,12 @@
     <string name="app_name">The Name Quiz App</string>
     <string name="button_quiz">Quiz</string>
     <string name="button_database">Database</string>
-    <string name="button_add">Add a dog</string>
     <string name="name_card">PlaceHolder Name</string>
     <string name="deleteChar">Enter name</string>
     <string name="btn_del_char">Delete</string>
     <string name="btn_add_card">Add Character</string>
+    <string name="btn_img_select">Select your doggo</string>
+    <string name="enter_name">Enter your doggo name</string>
+    <string name="goBackButton">Upload!</string>
+    <string name="btn_deleteCard">X</string>
 </resources>

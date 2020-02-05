@@ -44,10 +44,21 @@ class DogListAdapter(private val list: ArrayList<Dog>,
             itemView.setOnClickListener {
                 Toast.makeText(context,"Name: ${name.text}", Toast.LENGTH_LONG ).show()
             }
-
+            itemView.setOnLongClickListener{
+                    removeAt(adapterPosition)
+                    Toast.makeText(context, "Item: ${name.text} deleted", Toast.LENGTH_LONG).show()
+                    true
+                }
+            }
 
         }
 
+    fun removeAt(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, list.size)
     }
 
-}
+    }
+
+

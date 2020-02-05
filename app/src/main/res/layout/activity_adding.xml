@@ -6,4 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".AddingActivity">
 
+    <EditText
+        android:id="@+id/enter_name"
+        android:layout_width="337dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:hint="@string/enter_name"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textColorHint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.637"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_add_char" />
+
+    <Button
+        android:id="@+id/goBackButton"
+        android:layout_width="338dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/darker_gray"
+        android:text="@string/goBackButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.631"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enter_name" />
+
+    <ImageView
+        android:layout_width="350dp"
+        android:layout_height="300dp"
+        app:srcCompat="@drawable/ic_image_black_24dp"
+        android:id="@+id/img_add_char"
+        android:clickable="true"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintVertical_bias="0.066"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
