@@ -66,4 +66,18 @@
         app:layout_constraintBottom_toTopOf="@+id/textDatabaseTop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/owner_text"
+        android:textSize="30dp"
+        android:hint="Insert Name"
+        android:imeOptions="actionSend"
+        android:singleLine="true"
+
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

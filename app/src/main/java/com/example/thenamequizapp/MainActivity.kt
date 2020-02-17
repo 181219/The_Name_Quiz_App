@@ -1,8 +1,13 @@
 package com.example.thenamequizapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +29,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        // setup preference
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        pref.apply{
+            val owner = getString("OWNER", "")
+            owner_text.setText(owner)
+        }
+
+        //Edit Listener
+        findViewById<EditText>(R.id.owner_text).setOnEditorActionListener { v, actionId, event ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_SEND -> {
+
+                    saveData()
+                    true
+                }
+                else -> false
+            }
+        }
+
+
         dogList = ArrayList()
         layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager
         adapter = DogListAdapter((dogList as ArrayList<Dog>), this)
@@ -35,31 +61,31 @@ class MainActivity : AppCompatActivity() {
         //load in data
 
         var dog1 = Dog()
-        dog1.img = R.drawable.dogs_akita
+        dog1.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_akita")
         dog1.name = "Akita"
         dogList!!.add(dog1)
         var dog2 = Dog()
-        dog2.img = R.drawable.dogs_beagle
+        dog2.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_beagle")
         dog2.name = "Beagle"
         dogList!!.add(dog2)
         var dog3 = Dog()
-        dog3.img = R.drawable.dogs_boxer
+        dog3.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_boxer")
         dog3.name = "Boxer"
         dogList!!.add(dog3)
         var dog4 = Dog()
-        dog4.img = R.drawable.dogs_chihuahua
+        dog4.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_chihuahua")
         dog4.name = "Chihuahua"
         dogList!!.add(dog4)
         var dog5 = Dog()
-        dog5.img = R.drawable.dogs_labrador
+        dog5.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_labrador")
         dog5.name = "Labrador"
         dogList!!.add(dog5)
         var dog6 = Dog()
-        dog6.img = R.drawable.dogs_poodle
+        dog6.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_poodle")
         dog6.name = "Poodle"
         dogList!!.add(dog6)
         var dog7 = Dog()
-        dog7.img = R.drawable.dogs_sheltie
+        dog7.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_sheltie")
         dog7.name = "Sheltie"
         dogList!!.add(dog7)
 
@@ -88,7 +114,8 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 var dog = Dog()
                 dog.name = data!!.extras.get("name").toString()
-                dog.img = data!!.extras.getInt("img")
+                val imgPath: String = data!!.extras.get("img").toString()
+                dog.img = Uri.parse(imgPath)
 
 //                person.img = data!!.extras.get("img").toString().toInt()
                 dogList!!.add(dog)
@@ -132,6 +159,25 @@ class MainActivity : AppCompatActivity() {
 
         startActivityForResult(intent, REQUEST_CODE_GAME)
         this.overridePendingTransition(0, 0)
+    }
+
+   /* fun checkOwnerName(){
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        if
+        val ownerName: String = pref.getString("owner_name", null) // getting String
+
+    }
+*/
+    fun saveData(){
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = pref.edit()
+
+       editor
+           .putString("OWNER", owner_text.text.toString())
+           .apply()
+
+       Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+
     }
 }
 

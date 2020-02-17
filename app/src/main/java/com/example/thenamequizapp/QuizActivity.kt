@@ -2,6 +2,7 @@ package com.example.thenamequizapp
 
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
@@ -12,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_quiz.*
 class QuizActivity : AppCompatActivity() {
 
     var name: String = ""
-    var img: Int = 0
+    var img: Uri? = null
     var isCorrect: Boolean = false
 
 
@@ -25,9 +26,10 @@ class QuizActivity : AppCompatActivity() {
 
         if(data != null){
             name = data.get("name").toString().toLowerCase()
-            img = data.getInt("img")
+            val imgPath: String = data.get("img").toString()
+            img = Uri.parse(imgPath)
             var score: Int = data.getInt("score")
-            img_game.setImageResource(img)
+            img_game.setImageURI(img)
             txt_score.text = "Your score is: " +score.toString()
         }
 
@@ -35,6 +37,8 @@ class QuizActivity : AppCompatActivity() {
            sendAnswer()
         }
 
+
+        // Edit Listener
         findViewById<EditText>(R.id.txt_game_answer).setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {

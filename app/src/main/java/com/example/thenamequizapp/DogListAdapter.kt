@@ -39,7 +39,7 @@ class DogListAdapter(private val list: ArrayList<Dog>,
 
 
             name.text = dog.name
-            img.setImageResource(dog.img!!)
+            img.setImageURI(dog.img!!)
 
             itemView.setOnClickListener {
                 Toast.makeText(context,"Name: ${name.text}", Toast.LENGTH_LONG ).show()

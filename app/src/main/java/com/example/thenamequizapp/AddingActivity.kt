@@ -2,19 +2,24 @@ package com.example.thenamequizapp
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.PendingIntent.getActivity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_adding.*
+
 
 class AddingActivity : AppCompatActivity() {
 
     var path: String? = null
-    var imgId : Int? = 0
+    var imgId : Uri? = null
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,19 +57,38 @@ class AddingActivity : AppCompatActivity() {
         val pickImageIntent = Intent(Intent.ACTION_PICK)
         pickImageIntent.type = "image/*"
         startActivityForResult(pickImageIntent, IMAGE_PICK_CODE)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            img_add_char.setImageURI(data?.data)
+            val imgUri: Uri? = data?.data
+            img_add_char.setImageURI(imgUri)
             path = data?.data?.path
-            imgId = R.drawable.ic_image_black_24dp
-
+            val picturePath = getPath(this.applicationContext, data?.data)
+            imgId = Uri.parse(picturePath)
+            Toast.makeText(this, picturePath, Toast.LENGTH_LONG).show()
             println("The imgID: $imgId")
             println("The uri: $path")
+
+
         }
+    }
+    fun getPath(context: Context, uri: Uri?): String? {
+        var result: String? = null
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor: Cursor = context.getContentResolver().query(uri, proj, null, null, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val column_index: Int = cursor.getColumnIndexOrThrow(proj[0])
+                result = cursor.getString(column_index)
+            }
+            cursor.close()
+        }
+        if (result == null) {
+            result = "Not found"
+        }
+        return result
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
