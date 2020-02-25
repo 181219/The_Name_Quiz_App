@@ -64,21 +64,6 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
 
-        //load in data
-/*
-        var dog1 = Dog()
-        dog1.img = "android.resource://com.example.thenamequizapp/drawable/dogs_akita"
-        dog1.name = "Akita"
-        dbHandler!!.createDog(dog1)
-        var dog2 = Dog()
-        dog2.img = "android.resource://com.example.thenamequizapp/drawable/dogs_beagle"
-        dog2.name = "Beagle"
-        dbHandler!!.createDog(dog2)
-        var dog3 = Dog()
-        dog3.img = "android.resource://com.example.thenamequizapp/drawable/dogs_boxer"
-        dog3.name = "Boxer"
-        dbHandler!!.createDog(dog3)
-*/
         checkDB()
 
         dogList = dbHandler!!.readDogs()
@@ -124,7 +109,10 @@ class MainActivity : AppCompatActivity() {
                 val imgPath: String = data!!.extras.get("img").toString()
                 var img = (imgPath)
 
-                //dogList!!.add(dog)
+                var dog = Dog()
+                dog.name = name
+                dog.img = img
+                dogList!!.add(dog)
                 Toast.makeText(this, name + " " + img, Toast.LENGTH_LONG).show()
                 /**
                  * Notifies changes, updates the view
@@ -187,7 +175,18 @@ class MainActivity : AppCompatActivity() {
     }
     fun checkDB(){
         if(dbHandler!!.getDogsCount() <=0){
-            startActivity(Intent(this, AddingActivity::class.java))
+            var dog1 = Dog()
+            dog1.img = "android.resource://com.example.thenamequizapp/drawable/dogs_akita"
+            dog1.name = "Akita"
+            dbHandler!!.createDog(dog1)
+            var dog2 = Dog()
+            dog2.img = "android.resource://com.example.thenamequizapp/drawable/dogs_beagle"
+            dog2.name = "Beagle"
+            dbHandler!!.createDog(dog2)
+            var dog3 = Dog()
+            dog3.img = "android.resource://com.example.thenamequizapp/drawable/dogs_boxer"
+            dog3.name = "Boxer"
+            dbHandler!!.createDog(dog3)
         }
     }
 }

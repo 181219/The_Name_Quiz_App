@@ -43,11 +43,11 @@ class DogListAdapter(private val list: ArrayList<Dog>,
         var dogImg = itemView.findViewById(R.id.img_card) as ImageView
 
         fun bindViews(dog: Dog){
-            dogName.text = dog.name.toString()
+            dogName.text = dog.name
             dogImg.setImageURI(Uri.parse(dog.img))
 
             itemView.setOnClickListener {
-                Toast.makeText(context,"Name: ${dogName.text}", Toast.LENGTH_LONG ).show()
+                Toast.makeText(context,"Name: ${dogName.text}" + " Path: ${dogImg.toString()}", Toast.LENGTH_LONG ).show()
             }
             itemView.setOnLongClickListener{
                 var mPosition: Int = adapterPosition

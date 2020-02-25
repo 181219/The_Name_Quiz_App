@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_adding.*
 class AddingActivity : AppCompatActivity() {
 
     var path: String? = null
-    var imgId : Uri? = null
+    var imgId : String? = null
 
     var dbHandler: DogDBHelper? = null
 
@@ -36,8 +36,8 @@ class AddingActivity : AppCompatActivity() {
 
             if(!TextUtils.isEmpty(enter_name.text.toString())){
                 var dog = Dog()
-                dog.img= img_add_char.toString()
-                dog.name = enter_name.toString()
+                dog.img= imgId
+                dog.name = enter_name.getText().toString()
 
                 saveToDB(dog)
             } else {
@@ -81,8 +81,8 @@ class AddingActivity : AppCompatActivity() {
             val imgUri: Uri? = data?.data
             img_add_char.setImageURI(imgUri)
             path = data?.data?.path
-            val picturePath = getPath(this.applicationContext, data?.data)
-            imgId = Uri.parse(picturePath)
+            val picturePath: String? = getPath(this.applicationContext, data?.data)
+            imgId = picturePath.toString()
             Toast.makeText(this, picturePath, Toast.LENGTH_LONG).show()
             println("The imgID: $imgId")
             println("The uri: $path")
