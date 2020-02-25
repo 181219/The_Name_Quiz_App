@@ -34,6 +34,11 @@ class DogListAdapter(private val list: ArrayList<Dog>,
     }
 
 
+    fun addItem(dog : Dog){
+        list.add(dog)
+        notifyDataSetChanged()
+    }
+
 
     inner class ViewHolder(itemView: View, context: Context, list:ArrayList<Dog>?): RecyclerView.ViewHolder(itemView) {
         var mContext: Context = context

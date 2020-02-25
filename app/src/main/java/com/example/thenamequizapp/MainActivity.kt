@@ -112,7 +112,8 @@ class MainActivity : AppCompatActivity() {
                 var dog = Dog()
                 dog.name = name
                 dog.img = img
-                dogList!!.add(dog)
+//                dogList!!.add(dog)
+                adapter!!.addItem(dog)
                 Toast.makeText(this, name + " " + img, Toast.LENGTH_LONG).show()
                 /**
                  * Notifies changes, updates the view
