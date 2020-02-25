@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_adding.*
@@ -21,12 +22,27 @@ class AddingActivity : AppCompatActivity() {
     var path: String? = null
     var imgId : Uri? = null
 
-    @SuppressLint("NewApi")
+    var dbHandler: DogDBHelper? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding)
 
+        dbHandler = DogDBHelper(this)
+
+        //checkDB()
+
         goBackButton.setOnClickListener {
+
+            if(!TextUtils.isEmpty(enter_name.text.toString())){
+                var dog = Dog()
+                dog.img= img_add_char.toString()
+                dog.name = enter_name.toString()
+
+                saveToDB(dog)
+            } else {
+                Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_LONG).show()
+            }
             var returnInt = this.intent
 
             returnInt.putExtra("name", enter_name.text)
@@ -89,6 +105,12 @@ class AddingActivity : AppCompatActivity() {
             result = "Not found"
         }
         return result
+    }
+
+
+
+    fun saveToDB(dog: Dog){
+        dbHandler!!.createDog(dog)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

@@ -1,7 +1,7 @@
 package com.example.thenamequizapp
 
 import android.app.Activity
-import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -22,12 +22,17 @@ class MainActivity : AppCompatActivity() {
     var score: Int = 0
     var correct: Boolean = false
     private var adapter: DogListAdapter? = null
-    private var dogList: MutableList<Dog>? = null
+    private var dogList: ArrayList<Dog>? = null
+    private var dogListItems: ArrayList<Dog>? = null
+
     private var layoutManager: RecyclerView.LayoutManager? = null
+    var dbHandler: DogDBHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        dbHandler = DogDBHelper(this)
 
 
         // setup preference
@@ -51,43 +56,46 @@ class MainActivity : AppCompatActivity() {
 
 
         dogList = ArrayList()
-        layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager
-        adapter = DogListAdapter((dogList as ArrayList<Dog>), this)
+        dogListItems = ArrayList()
+        layoutManager = LinearLayoutManager(this)
+        adapter = DogListAdapter(dogListItems!!, this)
 
         // Setup recyclerview
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
 
         //load in data
-
+/*
         var dog1 = Dog()
-        dog1.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_akita")
+        dog1.img = "android.resource://com.example.thenamequizapp/drawable/dogs_akita"
         dog1.name = "Akita"
-        dogList!!.add(dog1)
+        dbHandler!!.createDog(dog1)
         var dog2 = Dog()
-        dog2.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_beagle")
+        dog2.img = "android.resource://com.example.thenamequizapp/drawable/dogs_beagle"
         dog2.name = "Beagle"
-        dogList!!.add(dog2)
+        dbHandler!!.createDog(dog2)
         var dog3 = Dog()
-        dog3.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_boxer")
+        dog3.img = "android.resource://com.example.thenamequizapp/drawable/dogs_boxer"
         dog3.name = "Boxer"
-        dogList!!.add(dog3)
-        var dog4 = Dog()
-        dog4.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_chihuahua")
-        dog4.name = "Chihuahua"
-        dogList!!.add(dog4)
-        var dog5 = Dog()
-        dog5.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_labrador")
-        dog5.name = "Labrador"
-        dogList!!.add(dog5)
-        var dog6 = Dog()
-        dog6.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_poodle")
-        dog6.name = "Poodle"
-        dogList!!.add(dog6)
-        var dog7 = Dog()
-        dog7.img = Uri.parse("android.resource://com.example.thenamequizapp/drawable/dogs_sheltie")
-        dog7.name = "Sheltie"
-        dogList!!.add(dog7)
+        dbHandler!!.createDog(dog3)
+*/
+        checkDB()
+
+        dogList = dbHandler!!.readDogs()
+
+        dogList!!.reverse()
+
+        for (d in dogList!!.iterator()){
+            val dog = Dog()
+
+            dog.name = "Name: ${d.name}"
+            dog.img = d.img
+            dog.id = d.id
+
+            dogListItems!!.add(dog)
+        }
+
+        adapter!!.notifyDataSetChanged()
 
 
         btn_add_card.setOnClickListener {
@@ -112,14 +120,12 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_DOG) {
             if (resultCode == Activity.RESULT_OK) {
-                var dog = Dog()
-                dog.name = data!!.extras.get("name").toString()
+                var name = data!!.extras.get("name").toString()
                 val imgPath: String = data!!.extras.get("img").toString()
-                dog.img = Uri.parse(imgPath)
+                var img = (imgPath)
 
-//                person.img = data!!.extras.get("img").toString().toInt()
-                dogList!!.add(dog)
-                Toast.makeText(this, dog.name + " " + dog.img, Toast.LENGTH_LONG).show()
+                //dogList!!.add(dog)
+                Toast.makeText(this, name + " " + img, Toast.LENGTH_LONG).show()
                 /**
                  * Notifies changes, updates the view
                  */
@@ -178,6 +184,11 @@ class MainActivity : AppCompatActivity() {
 
        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
 
+    }
+    fun checkDB(){
+        if(dbHandler!!.getDogsCount() <=0){
+            startActivity(Intent(this, AddingActivity::class.java))
+        }
     }
 }
 
