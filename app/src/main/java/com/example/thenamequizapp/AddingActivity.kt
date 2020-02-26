@@ -86,21 +86,18 @@ class AddingActivity : AppCompatActivity() {
             Toast.makeText(this, picturePath, Toast.LENGTH_LONG).show()
             println("The imgID: $imgId")
             println("The uri: $path")
-
-
         }
     }
     fun getPath(context: Context, uri: Uri?): String? {
         var result: String? = null
         val proj = arrayOf(MediaStore.Images.Media.DATA)
         val cursor: Cursor = context.getContentResolver().query(uri, proj, null, null, null)
-        if (cursor != null) {
+
             if (cursor.moveToFirst()) {
                 val column_index: Int = cursor.getColumnIndexOrThrow(proj[0])
                 result = cursor.getString(column_index)
             }
             cursor.close()
-        }
         if (result == null) {
             result = "Not found"
         }

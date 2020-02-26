@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-
 class DogListAdapter(private val list: ArrayList<Dog>,
                      private val context: Context): RecyclerView.Adapter<DogListAdapter.ViewHolder>() {
 
@@ -33,13 +32,6 @@ class DogListAdapter(private val list: ArrayList<Dog>,
         return list!!.size
     }
 
-
-    fun addItem(dog : Dog){
-        list.add(dog)
-        notifyDataSetChanged()
-    }
-
-
     inner class ViewHolder(itemView: View, context: Context, list:ArrayList<Dog>?): RecyclerView.ViewHolder(itemView) {
         var mContext: Context = context
         var mList: ArrayList<Dog> = list!!
@@ -52,22 +44,18 @@ class DogListAdapter(private val list: ArrayList<Dog>,
             dogImg.setImageURI(Uri.parse(dog.img))
 
             itemView.setOnClickListener {
-                Toast.makeText(context,"Name: ${dogName.text}" + " Path: ${dogImg.toString()}", Toast.LENGTH_LONG ).show()
+                Toast.makeText(context,"Name: ${dogName.text}", Toast.LENGTH_SHORT ).show()
             }
             itemView.setOnLongClickListener{
                 var mPosition: Int = adapterPosition
                 var dog: Dog = mList[mPosition]
                 mList.removeAt(adapterPosition)
                 notifyItemRemoved(adapterPosition)
-                deleteDog(dog.id!!)
-                    Toast.makeText(context, "Item: ${dogName.text} deleted", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Item: ${dogName.text} deleted" , Toast.LENGTH_SHORT).show()
                     true
                 }
             }
-            fun deleteDog(id:Int){
-                var db: DogDBHelper = DogDBHelper(mContext)
-                db.deleteDog(id)
-            }
+
         }
 
 

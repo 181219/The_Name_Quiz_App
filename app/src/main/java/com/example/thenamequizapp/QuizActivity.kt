@@ -9,32 +9,28 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_quiz.*
+import java.util.*
 
 class QuizActivity : AppCompatActivity() {
 
     var name: String = ""
-    var img: Uri? = null
-    var isCorrect: Boolean = false
-
+    var img: String? = null
+    var dbHandler: DogDBHelper? = null
+    var score: Int = 0
+    private var quizList: ArrayList<Dog>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
-
-        var data = intent.extras
-
-        if(data != null){
-            name = data.get("name").toString().toLowerCase()
-            val imgPath: String = data.get("img").toString()
-            img = Uri.parse(imgPath)
-            var score: Int = data.getInt("score")
-            img_game.setImageURI(img)
-            txt_score.text = "Your score is: " +score.toString()
-        }
+        dbHandler = DogDBHelper(this)
+        quizList = ArrayList()
+        quizList = dbHandler!!.readDogs()
+        txt_score.text = "Your score is: " +score.toString()
+        showRandomQuizDog()
 
         btn_enter.setOnClickListener{
-           sendAnswer()
+           checkAnswer()
         }
 
 
@@ -42,7 +38,6 @@ class QuizActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.txt_game_answer).setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {
-                    sendAnswer()
                     true
                 }
                 else -> false
@@ -50,19 +45,38 @@ class QuizActivity : AppCompatActivity() {
         }
 
     }
-    fun sendAnswer(){
-        var returnInt = this.intent
+    fun checkAnswer(){
 
         var answer: String = txt_game_answer.text.toString().toLowerCase()
         if (answer==name){
-            isCorrect=true
+            score++
             Toast.makeText(this, "CORRECT!", Toast.LENGTH_LONG).show()
         }
         else{
             Toast.makeText(this, "WRONG! The answer was ${name}", Toast.LENGTH_LONG).show()
         }
-        returnInt.putExtra("correct", isCorrect)
-        setResult(Activity.RESULT_OK, returnInt)
-        finish()
+       // returnInt.putExtra("correct", isCorrect)
+        //setResult(Activity.RESULT_OK, returnInt)
+        txt_game_answer.setText("")
+       showRandomQuizDog()
     }
+
+    fun showRandomQuizDog(){
+
+        //Get a random dog from list
+        var randDog: Dog = quizList!![randomN()]
+
+        //Sett random dog as quiz question
+        name = randDog.name.toString().toLowerCase()
+        img = randDog.img.toString()
+        img_game.setImageURI(Uri.parse(img))
+        txt_score.text = "Your score is: " +score.toString()
+    }
+
+    fun randomN(): Int{
+        var doggyCount = dbHandler!!.getDogsCount()
+        var rand = Random().nextInt(doggyCount)
+       return rand
+    }
+
 }

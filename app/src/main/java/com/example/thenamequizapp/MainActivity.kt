@@ -19,25 +19,16 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     val REQUEST_CODE_DOG: Int = 1
     val REQUEST_CODE_GAME: Int = 2
-    var score: Int = 0
-    var correct: Boolean = false
-    private var adapter: DogListAdapter? = null
-    private var dogList: ArrayList<Dog>? = null
-    private var dogListItems: ArrayList<Dog>? = null
+    val REQUEST_CODE_DATAB: Int = 3
 
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    var dbHandler: DogDBHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        dbHandler = DogDBHelper(this)
-
-
         // setup preference
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        pref.apply{
+        pref.apply {
             val owner = getString("OWNER", "")
             owner_text.setText(owner)
         }
@@ -55,32 +46,10 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        dogList = ArrayList()
-        dogListItems = ArrayList()
-        layoutManager = LinearLayoutManager(this)
-        adapter = DogListAdapter(dogListItems!!, this)
-
-        // Setup recyclerview
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
-
-        checkDB()
-
-        dogList = dbHandler!!.readDogs()
-
-        dogList!!.reverse()
-
-        for (d in dogList!!.iterator()){
-            val dog = Dog()
-
-            dog.name = "Name: ${d.name}"
-            dog.img = d.img
-            dog.id = d.id
-
-            dogListItems!!.add(dog)
+        btn_DB.setOnClickListener{
+            var intent = Intent(this, DatabaseActivity::class.java)
+            startActivityForResult(intent, REQUEST_CODE_DATAB)
         }
-
-        adapter!!.notifyDataSetChanged()
 
 
         btn_add_card.setOnClickListener {
@@ -90,13 +59,13 @@ class MainActivity : AppCompatActivity() {
 
         btn_start_quiz.setOnClickListener {
             var intent = Intent(this, QuizActivity::class.java)
-
+/*
             var number = randomN()
             //Picks a random dog from dogList and sends it to quiz activity
             intent.putExtra("name", dogList!![number].name)
             intent.putExtra("img", dogList!![number].img)
             intent.putExtra("score", score)
-
+*/
             startActivityForResult(intent, REQUEST_CODE_GAME)
         }
     }
@@ -105,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_DOG) {
             if (resultCode == Activity.RESULT_OK) {
-                var name = data!!.extras.get("name").toString()
+                /* var name = data!!.extras.get("name").toString()
                 val imgPath: String = data!!.extras.get("img").toString()
                 var img = (imgPath)
 
@@ -118,19 +87,25 @@ class MainActivity : AppCompatActivity() {
                 /**
                  * Notifies changes, updates the view
                  */
-                adapter!!.notifyDataSetChanged()
+                adapter!!.notifyDataSetChanged()*/
             }
         }
 
         if (requestCode == REQUEST_CODE_GAME) {
             if (resultCode == Activity.RESULT_OK) {
-                correct = data!!.extras.getBoolean("correct")
-                score(correct)
+                //  correct = data!!.extras.getBoolean("correct")
+                // score(correct)
             }
-            backToQuiz()
+            //backToQuiz()
+        }
+
+        if (requestCode == REQUEST_CODE_DATAB) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "ALL GOOD WERE BACK", Toast.LENGTH_LONG).show()
+            }
         }
     }
-
+        /*
     fun randomN(): Int {
         var random = Random()
         return random.nextInt(dogList!!.size)
@@ -155,27 +130,28 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_CODE_GAME)
         this.overridePendingTransition(0, 0)
     }
-
-   /* fun checkOwnerName(){
+*/
+        /* fun checkOwnerName(){
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         if
         val ownerName: String = pref.getString("owner_name", null) // getting String
 
     }
 */
-    fun saveData(){
-        val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = pref.edit()
+        fun saveData() {
+            val pref = PreferenceManager.getDefaultSharedPreferences(this)
+            val editor = pref.edit()
 
-       editor
-           .putString("OWNER", owner_text.text.toString())
-           .apply()
+            editor
+                .putString("OWNER", owner_text.text.toString())
+                .apply()
 
-       Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
 
-    }
-    fun checkDB(){
-        if(dbHandler!!.getDogsCount() <=0){
+        }
+/*    fun checkDB(){
+        val doggyCount = dbHandler!!.getDogsCount()
+        if(doggyCount ==0){
             var dog1 = Dog()
             dog1.img = "android.resource://com.example.thenamequizapp/drawable/dogs_akita"
             dog1.name = "Akita"
@@ -189,6 +165,7 @@ class MainActivity : AppCompatActivity() {
             dog3.name = "Boxer"
             dbHandler!!.createDog(dog3)
         }
+    }*/
     }
-}
+
 

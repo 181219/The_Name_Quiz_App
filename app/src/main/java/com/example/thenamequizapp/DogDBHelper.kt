@@ -14,7 +14,7 @@ import java.util.ArrayList
 
         override fun onCreate(db: SQLiteDatabase?) {
             var CREATE_DOG_TABLE: String = "CREATE TABLE " + TABLE_NAME + "("+
-                    KEY_ID + "INTEGER PRIMARY KEY, " +
+                    KEY_ID + " PRIMARY KEY, " +
                     KEY_DOG_NAME + " TEXT, " +
                     KEY_DOG_IMG + " TEXT" + ");"
 
@@ -44,30 +44,6 @@ import java.util.ArrayList
             db.close()
         }
 
-        fun readADog(id: Int): Dog{
-
-            var db: SQLiteDatabase = readableDatabase
-
-            var cursor: Cursor = db.query(
-                TABLE_NAME, arrayOf(
-                    KEY_ID,
-                    KEY_DOG_NAME,
-                    KEY_DOG_IMG
-                ), KEY_ID + "=?", arrayOf(id.toString()),
-                null, null, null, null
-                )
-            var dog = Dog()
-
-            if(cursor != null){
-                cursor.moveToFirst()
-
-                dog.name = cursor.getString(cursor.getColumnIndex(KEY_DOG_NAME))
-                dog.img = cursor.getString(cursor.getColumnIndex(KEY_DOG_IMG))
-            }
-            cursor.close()
-
-            return dog
-        }
 
         //Read all dog in DB
         fun readDogs(): ArrayList<Dog> {
@@ -99,7 +75,7 @@ import java.util.ArrayList
         //Delete
         fun deleteDog(id: Int) {
             var db: SQLiteDatabase = writableDatabase
-            db.delete(TABLE_NAME, KEY_ID + "=?", arrayOf(id.toString()))
+            db.delete(TABLE_NAME, KEY_ID + "=?",arrayOf(id.toString()))
             db.close()
         }
 
