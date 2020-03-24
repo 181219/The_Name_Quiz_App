@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_adding.*
@@ -19,14 +20,29 @@ import kotlinx.android.synthetic.main.activity_adding.*
 class AddingActivity : AppCompatActivity() {
 
     var path: String? = null
-    var imgId : Uri? = null
+    var imgId : String? = null
 
-    @SuppressLint("NewApi")
+    var dbHandler: DogDBHelper? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding)
 
+        dbHandler = DogDBHelper(this)
+
+        //checkDB()
+
         goBackButton.setOnClickListener {
+
+            if(!TextUtils.isEmpty(enter_name.text.toString())){
+                var dog = Dog()
+                dog.img= imgId
+                dog.name = enter_name.getText().toString()
+
+                saveToDB(dog)
+            } else {
+                Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_LONG).show()
+            }
             var returnInt = this.intent
 
             returnInt.putExtra("name", enter_name.text)
@@ -65,30 +81,33 @@ class AddingActivity : AppCompatActivity() {
             val imgUri: Uri? = data?.data
             img_add_char.setImageURI(imgUri)
             path = data?.data?.path
-            val picturePath = getPath(this.applicationContext, data?.data)
-            imgId = Uri.parse(picturePath)
+            val picturePath: String? = getPath(this.applicationContext, data?.data)
+            imgId = picturePath.toString()
             Toast.makeText(this, picturePath, Toast.LENGTH_LONG).show()
             println("The imgID: $imgId")
             println("The uri: $path")
-
-
         }
     }
     fun getPath(context: Context, uri: Uri?): String? {
         var result: String? = null
         val proj = arrayOf(MediaStore.Images.Media.DATA)
         val cursor: Cursor = context.getContentResolver().query(uri, proj, null, null, null)
-        if (cursor != null) {
+
             if (cursor.moveToFirst()) {
                 val column_index: Int = cursor.getColumnIndexOrThrow(proj[0])
                 result = cursor.getString(column_index)
             }
             cursor.close()
-        }
         if (result == null) {
             result = "Not found"
         }
         return result
+    }
+
+
+
+    fun saveToDB(dog: Dog){
+        dbHandler!!.createDog(dog)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
